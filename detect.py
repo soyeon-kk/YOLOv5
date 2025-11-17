@@ -1,9 +1,8 @@
 import argparse
-import csv
 import os
-import platform
 import sys
 from pathlib import Path
+
 import torch
 
 FILE = Path(__file__).resolve()
@@ -12,26 +11,22 @@ if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))
 
-from changedetection import ChangeDetection
+from ultralytics.utils.plotting import Annotator, colors
 
-from ultralytics.utils.plotting import Annotator, colors, save_one_box
+from changedetection import ChangeDetection
 from models.common import DetectMultiBackend
 from utils.dataloaders import IMG_FORMATS, VID_FORMATS, LoadImages, LoadScreenshots, LoadStreams
 from utils.general import (
-    LOGGER,
-    Profile,
     check_file,
     check_img_size,
     check_imshow,
     check_requirements,
-    colorstr,
     cv2,
     increment_path,
     non_max_suppression,
     print_args,
     scale_boxes,
     strip_optimizer,
-    xyxy2xywh,
 )
 from utils.torch_utils import select_device, smart_inference_mode
 
@@ -90,14 +85,14 @@ def run(
 
     bs = 1
     if webcam:
-        view_img = check_imshow(warn=True)
+        check_imshow(warn=True)
         dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
         bs = len(dataset)
     elif screenshot:
         dataset = LoadScreenshots(source, img_size=imgsz, stride=stride, auto=pt)
     else:
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt, vid_stride=vid_stride)
-    vid_path, vid_writer = [None] * bs, [None] * bs
+    _vid_path, _vid_writer = [None] * bs, [None] * bs
 
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))
 
@@ -190,4 +185,3 @@ def main(opt):
 if __name__ == "__main__":
     opt = parse_opt()
     main(opt)
-
