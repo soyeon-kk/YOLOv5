@@ -504,7 +504,6 @@ class LoadStreams:
         if not all(x.is_alive() for x in self.threads):
             raise StopIteration
 
-
         im0 = self.imgs.copy()
         if self.transforms:
             im = np.stack([self.transforms(x) for x in im0])  # transforms
