@@ -1,14 +1,12 @@
-import torch
-from PIL import Image
-import numpy as np
 import cv2
-from pathlib import Path
+import numpy as np
+import torch
 
 from models.common import DetectMultiBackend
-from utils.general import non_max_suppression, scale_boxes, cv2
+from utils.general import cv2, non_max_suppression
 
-weights = 'yolov5s.pt'
-device = 'cpu'  
+weights = "yolov5s.pt"
+device = "cpu"
 
 
 model = DetectMultiBackend(weights, device=device, dnn=False)
@@ -19,7 +17,7 @@ assert img is not None, "이미지 없음"
 
 img0 = img.copy()
 img = cv2.resize(img, (640, 640))
-img = img[:, :, ::-1].transpose(2,0,1)    # BGR → RGB → CHW
+img = img[:, :, ::-1].transpose(2, 0, 1)  # BGR → RGB → CHW
 img = np.ascontiguousarray(img)
 
 img = torch.from_numpy(img).float()
